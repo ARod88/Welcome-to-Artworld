@@ -1,23 +1,27 @@
-import logo from './logo.svg';
 import './App.css';
+import { useState, useEffect } from  'react'
+import Gallery from './Gallery.jsx'
+import ButtonBar from './ButtonBar.js'
 
 function App() {
+  let [data, setData] = useState({})
+  let [artId, setArtId] = useState(465)
+
+  useEffect(() => {
+    document.title = 'Welcome to ArtWorld'
+    fetch(`https://collectionapi.metmuseum.org/public/collection/v1/objects/${artId}`)
+    .then(res => res.json())
+    .then(resData => setData(resData))
+  }, [artId])
+
+  const handleIterate = e => {
+    setArtId(artId + Number(e.target.value))
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Gallery data={data}/>
+      <ButtonBar handleIterate={handleIterate}/>
     </div>
   );
 }
